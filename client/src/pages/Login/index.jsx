@@ -1,13 +1,19 @@
 import style from './index.module.less'
 import logo from '../../assets/logo.png'
-import { Button, Input, Form ,Toast} from 'react-vant'
+import { Button, Input, Form } from 'react-vant'
+import toast, { Toaster } from 'react-hot-toast';
 import axios from '../../api'
+import { useNavigate } from 'react-router'
 export default function Login() {
+    const navigate = useNavigate()
     const [form] = Form.useForm()
     const onFinish = values => {
         console.log(values)
         axios.post('/user/login',values).then(res=>{
-            Toast.success('登录成功')
+            toast.success('登录成功')
+            localStorage.setItem('token',res.access_token)
+            localStorage.setItem('refresh_token',res.refresh_token)
+            navigate('/noteClass')
         })
     }
 
