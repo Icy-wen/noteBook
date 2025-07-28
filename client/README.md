@@ -11,6 +11,15 @@ less
 # html 标签样式重置
 rest.css
 
+# 路由传参
+- navigate('/noteList?category=1')  useSearchParams
+- navigate('/home/1')  配置路由时 path:'/home/:id'  useParams()
+- navigate('/home',{
+  state:{
+    id:1
+  }
+})
+和第一种写法一样，但好处是不会直接在url显示，useLoction()
 # 项目梳理
 1. 集中式路由配置
 - 将路由配置集中在一个文件中，方便管理
@@ -32,3 +41,6 @@ rest.css
 
 - 以上功能实现了鉴权，但token会过期，需要重新登录，实现一个无感刷新token的效果
   - 后端在登录接口返回一个长token和一个短token。短token用来做权限校验，长token用来在短token失效后重新获取新的短token和长token
+
+
+

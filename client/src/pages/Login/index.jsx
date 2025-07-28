@@ -4,13 +4,17 @@ import { Button, Input, Form } from 'react-vant'
 import toast, { Toaster } from 'react-hot-toast';
 import axios from '../../api'
 import { useNavigate } from 'react-router'
+import { useLocation } from 'react-router-dom'
 export default function Login() {
     const navigate = useNavigate()
     const [form] = Form.useForm()
+    const  {state}= useLocation()//从注册页传过来的参数
+    //console.log(state)
     const onFinish = values => {
-        console.log(values)
+        //console.log(values)
         axios.post('/user/login',values).then(res=>{
             toast.success('登录成功')
+            localStorage.setItem('user',JSON.stringify(res.data))
             localStorage.setItem('token',res.access_token)
             localStorage.setItem('refresh_token',res.refresh_token)
             navigate('/noteClass')
@@ -40,6 +44,7 @@ export default function Login() {
                         name='username'
                         label='用户名'
                         labelWidth={50}
+                        initialValue={state?.username}
                     >
                         <Input placeholder='请输入用户名' />
                     </Form.Item>
@@ -48,6 +53,7 @@ export default function Login() {
                         name='password'
                         label='密码'
                         labelWidth={50}
+                        initialValue={state?.password}
                     >
                         <Input placeholder='请输入密码' />
                     </Form.Item>
@@ -55,7 +61,9 @@ export default function Login() {
             </div>
 
 
-            <p className={style['login-tip']}>
+            <p className={style['login-tip']} onClick={()=>{
+                navigate('/register')
+            }}>
                 没有账号？去注册
             </p>
         </div>

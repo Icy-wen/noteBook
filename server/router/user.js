@@ -1,18 +1,21 @@
 const Router = require('@koa/router')
 const router = new Router()
-const { userLogin } = require('../controllers/index.js')
+const { userLogin ,findUser,userRegister} = require('../controllers/index.js')
 const { sign, verify, refreshVerify } = require('../utils/jwt.js')
+const { escape } = require('../utils/security.js')
 
 router.prefix('/user')  // 所有的路由都要以 /user 开头
 
 router.post('/login', async (ctx) => {
   // 1. 获取请求体中的账号密码
   // post 请求携带的参数都在请求体中
-  const { username, password } = ctx.request.body
+  let { username, password } = ctx.request.body
   // console.log(username, password);
   // 2. 检验账号密码是否合法
   // 去数据库查询账号密码是否正确
-
+  //注册时转译了
+  username=escape(username);
+  password=escape(password);
   try {
     const res = await userLogin(username, password)
     if (res.length) {  // 找到了有数据
@@ -82,7 +85,50 @@ router.post('/refresh', (ctx) => {
   }
 
 })
-
+//注册接口
+router.post('/register',async (ctx)=>{
+  // 1. 获取请求体中的账号密码
+  let {username,password,nickname}=ctx.request.body;
+  // 2. 检验账号是否有空
+  if(!username||!password||!nickname){
+    ctx.body={
+      code:'0',
+      msg:'账号密码昵称不能为空',
+      data:{}
+    }
+  }
+  username=escape(username);
+  password=escape(password);
+  nickname=escape(nickname);
+ try {
+  
+  // 3. 检验账号是否存在
+  const res=await findUser(username);
+  if(res.length){
+    ctx.body={
+      code:'0',
+      msg:'账号已存在',
+      data:{}
+    }
+    return
+  }
+ //写入数据库
+ const result=await userRegister({username,password,nickname,create_time:Date.now()});
+ if(result){
+  ctx.body={
+    code:'1',
+    msg:'注册成功',
+    data:{}
+  }
+ }
+ } catch (error) {
+  ctx.body={
+    code:'-1',
+    msg:'注册失败',
+    data:{}
+  }
+ }
+})
 
 // 测试 jwt
 router.get('/test', verify(), (ctx) => {

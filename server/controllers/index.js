@@ -34,7 +34,19 @@ const userLogin = (username, password) => {
   let _sql = `select * from user where username='${username}' and password='${password}';`
   return allServices.query(_sql)
 }
+// 查找账号是否存在
+const findUser = (username) => {
+  let _sql = `select * from user where username='${username}' ;`
+  return allServices.query(_sql)
+}
+// 注册要执行函数
+const userRegister = (userInfo) => {
+  let _sql = `insert into user (username,password,nickname,create_time) values ('${userInfo.username}','${userInfo.password}','${userInfo.nickname}',${userInfo.create_time});`
+  return allServices.query(_sql)
+}
 
 module.exports={
-    userLogin
+    userLogin,
+    findUser,
+    userRegister
 }
