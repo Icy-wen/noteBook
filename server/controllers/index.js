@@ -44,9 +44,20 @@ const userRegister = (userInfo) => {
   let _sql = `insert into user (username,password,nickname,create_time) values ('${userInfo.username}','${userInfo.password}','${userInfo.nickname}',${userInfo.create_time});`
   return allServices.query(_sql)
 }
-
+// 根据类型查找笔记列表
+const findNoteListByType = (note_type,user_id) => {
+  let _sql = `select * from note where note_type='${note_type}' and user_id=${user_id};`
+  return allServices.query(_sql)
+}
+// 根据id查找笔记详情
+const findNoteDetailById = (id) => {
+  let _sql = `select note.*, user.nickname from note join user on note.user_id = user.id where note.id=${id};`
+  return allServices.query(_sql)
+}
 module.exports={
     userLogin,
     findUser,
-    userRegister
+    userRegister,
+    findNoteListByType,
+    findNoteDetailById
 }
