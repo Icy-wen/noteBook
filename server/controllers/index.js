@@ -54,10 +54,16 @@ const findNoteDetailById = (id) => {
   let _sql = `select note.*, user.nickname from note join user on note.user_id = user.id where note.id=${id};`
   return allServices.query(_sql)
 }
+// 发布笔记
+const publishNote = (note_title,note_content,note_type,note_img,user_id,create_time,update_time) => {
+  let _sql = `insert into note (note_title,note_content,note_type,note_img,user_id,create_time,update_time) values ('${note_title}','${note_content}','${note_type}','${note_img}',${user_id},${create_time},${update_time});`
+  return allServices.query(_sql)
+}
 module.exports={
     userLogin,
     findUser,
     userRegister,
     findNoteListByType,
-    findNoteDetailById
+    findNoteDetailById,
+    publishNote
 }

@@ -32,7 +32,7 @@ export default function NoteClass() {
             <WapNav className={styles['icon']} onClick={() => setShowMenu(true)} />
           </div>
           <div>
-            <Edit className={styles['icon']} />
+            <Edit className={styles['icon']} onClick={()=>navigate('/notePublish')}/>
             <LikeO className={styles['icon']} />
             <Search className={styles['icon']} />
           </div>
